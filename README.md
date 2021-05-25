@@ -7,6 +7,7 @@
 ## フォルダ構成
 
 docker-ml
+
 │──**Dockerfile  #  pyproject.toml で定義した各パッケージを自動でインストールするようにしたDockerfile**
 
 │──**pyproject.toml  # poetryでパッケージ依存を管理。使ってるpoetry環境のpyproject.tomlに置き換えたらいい**
