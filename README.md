@@ -1,6 +1,6 @@
-# WSL2+Docker+VSCodeのRemote Containersで環境構築
+# WSL2+Docker+poetryで環境構築
 
-- https://cpp-learning.com/wsl2-docker-vscode/
+- 参考: https://cpp-learning.com/wsl2-docker-vscode/
 
 
 
@@ -14,13 +14,16 @@ docker-ml
 
 │──docker_run.sh  # Dockerfileたたくシェルスクリプト
 
-│──code
+│──docker_ml
 
-　│──main.py  # サンプル機械学習ソースコード(sklearn)
+　│──※環境構築コマンド履歴.txt  # Dockerでpyproject.toml作る手順とかのメモ
+　│──code
 
-　│──model  # モデル保存用フォルダ
+　　│──main.py  # サンプル機械学習ソースコード(sklearn)
 
-　└──run_model.sh  # main.py実行するシェルスクリプト
+　　│──model  # モデル保存用フォルダ
+
+　　└──run_model.sh  # main.py実行するシェルスクリプト
 
 
 
@@ -30,10 +33,26 @@ docker-ml
 ```bash
 $ cd /mnt/c/Users/81908/MyGitHub/docker_ml/docker_ml
 $ ./docker_run.sh  # イメージ作成+コンテナ起動
-$ cd code/  # コード置いてるディレクトリに移動
-$ ./run_model.sh  # モデル学習実行
+$ cd docker_ml/code/  # コード置いてるディレクトリに移動
+$ ./run_model.sh  # モデル学習予測実行
+$ cd ../notebok
+$ jupyter lab --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.token='' --port=8889  # http://localhost:8889/ からjupyter起動確認
 $ exit  # コンテナから出る
 ```
+
+
+
+※wsl2+Dockerはめちゃめちゃメモリを食うので微妙かも…
+
+- https://zenn.dev/takajun/articles/4f15d115548899
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+
 
 
 
@@ -49,7 +68,7 @@ $ exit  # コンテナから出る
 
 
 
-## 前提条件
+### 前提条件
 
 - windows10
 - WSL2インストール済み
@@ -61,7 +80,7 @@ $ exit  # コンテナから出る
 
 
 
-## 環境構築でつまずいたところ
+### つまずいたところ
 
 - **vscodeのターミナルは「>< WSL: Ubuntu」を指定しないと WSL2 に接続できない**（他に「>< WSL: Ubuntu-20.04」も選べるがこれはWSL2ではない。これ選択するとdocker コマンドエラーになる）
   ![vscode](image/vscode.png)

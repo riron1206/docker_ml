@@ -1,0 +1,43 @@
+# .wslconfig を置いて、WSL2 で使用できるメモリの最大値を設定する
+# 参考: https://zenn.dev/takajun/articles/4f15d115548899
+C:\Users\[username]\.wslconfig
+
+# wsl2でシェル起動して以下のコマンドたたいていく
+
+# イメージ作成
+docker build -t docker_ml -f Dockerfile_for_make_toml .
+
+# コンテナ起動
+docker run -p 8889:8889 -it -v $PWD/docker_ml:/docker_ml --rm docker_ml /bin/bash
+
+# pyproject.toml作成する（Dockerfileにpipコマンド書いていくより、poetryでパッケージ追加した方がバージョン管理が楽なはず…）
+poetry init
+> Package name []:  docker_ml にする.あとはEnter押してデフォルトでいく
+
+# パッケージ追加
+poetry add numpy pandas matplotlib seaborn scikit-learn tqdm
+poetry add xgboost lightgbm
+poetry add torch
+poetry add optuna
+poetry add streamlit
+poetry add nyaggle
+poetry add jupyterlab jupyter black jupyter_contrib_nbextensions papermill
+poetry run jupyter contrib nbextension install --user
+poetry run jupyter nbextensions_configurator enable --user
+
+# jupyter起動確認
+jupyter lab --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.token='' --port=8889
+
+# 別のwsl2でシェル起動してコンテナで作成したpyproject.tomlをローカルにコピー
+docker cp <コンテナ名。コンテナ名はDocker Desktopのアプリからわかる>:/pyproject.toml /mnt/c/Users/81908
+実際にたたいたコマンド docker cp gifted_edison:/pyproject.toml /mnt/c/Users/81908/
+
+# コンテナから出る
+exit
+
+# pyproject.toml使って再度イメージ+コンテナ作成
+# メモリ足りない場合は-m 16g とかにすること（これ指定するとコンテナが最大16Gまでしかメモリ確保しないようにする）
+docker build -t docker_ml -f Dockerfile .
+docker run -p 8889:8889 -it -v $PWD/docker_ml:/docker_ml --rm docker_ml /bin/bash
+
+

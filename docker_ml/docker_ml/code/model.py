@@ -1,3 +1,4 @@
+import argparse
 import numpy as np
 import joblib
 from palmerpenguins import load_penguins
@@ -19,7 +20,8 @@ def train():
 
     # split dataset (train:valid = 7:3)
     X_train, X_valid, y_train, y_valid = train_test_split(
-        X, y, test_size=0.3, random_state=42)
+        X, y, test_size=0.3, random_state=42
+    )
 
     # learn
     model = DecisionTreeClassifier()
@@ -41,7 +43,7 @@ def train():
 def predict():
     # model name + path
     name = "decisiontree_model"
-    saved_filename = (f"model/{name}.pkl")
+    saved_filename = f"model/{name}.pkl"
 
     # test data
     x_test = np.array([[39.2, 17.7, 181, 3740]])
@@ -55,5 +57,11 @@ def predict():
 
 
 if __name__ == "__main__":
-    train()
-    predict()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-t", "--type", type=str, default="train")
+    args = parser.parse_args()
+
+    if args.type == "train":
+        train()
+    else:
+        predict()
