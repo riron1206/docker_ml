@@ -1,0 +1,9 @@
+FROM python:3.8
+
+RUN set -x && \
+    curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+ENV PATH /root/.poetry/bin:$PATH
+RUN poetry config virtualenvs.create false
+
+COPY pyproject.toml ./
+RUN poetry install --no-root --no-dev
