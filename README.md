@@ -12,11 +12,11 @@ docker-ml
 │──docker_run.sh  # Dockerfileたたくシェルスクリプト
 │──code
 
-?    │──main.py  # サンプル機械学習ソースコード(sklearn)
+　│──main.py  # サンプル機械学習ソースコード(sklearn)
 
-?    │──model  # モデル保存用フォルダ
+　│──model  # モデル保存用フォルダ
 
-   └──run_model.sh  # main.py実行するシェルスクリプト
+　└──run_model.sh  # main.py実行するシェルスクリプト
 
 
 
