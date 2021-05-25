@@ -16,7 +16,7 @@ docker-ml
 
 ?    │──model  # モデル保存用フォルダ
 
-?    └──run_model.sh  # main.py実行するシェルスクリプト
+   └──run_model.sh  # main.py実行するシェルスクリプト
 
 
 
