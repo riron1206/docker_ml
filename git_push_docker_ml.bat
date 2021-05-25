@@ -1,4 +1,4 @@
-@rem ì¬“ú2021/5/24 github XV
+@rem ä½œæˆæ—¥2021/5/24 github æ›´æ–°
 
 cd C:\Users\81908\MyGitHub\docker_ml
 call git add --all
