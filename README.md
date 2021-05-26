@@ -12,16 +12,18 @@
 ```
 docker-ml
 │──Dockerfile         # pyproject.toml で定義した各パッケージを自動でインストールするようにしたDockerfile
-│──Dockerfile_poetry  # poetryをinstallするだけのDockerfile
 │──pyproject.toml     # poetryでパッケージ依存を管理。使ってるpoetry環境のpyproject.tomlに置き換えたらいい
+│──prepare_poetry
+　│──Dockerfile_poetry  # poetryをinstallするだけのDockerfile
 │──※環境構築コマンド履歴.txt  # Dockerでpyproject.toml作る手順とかのメモ
-│──tests          # テストコード
-　│──main.py       # サンプル機械学習ソースコード(sklearn)
-　│──model         # モデル保存用フォルダ
-　└──run_model.sh  # main.py実行するシェルスクリプト
-│──my_package     # パッケージ化したいモジュール
-├──notebook       # EDAで使用するnotebook
-├──streamlit_app  # streamlitのapp
+│──docker-ml
+　│──tests          # テストコード
+　　│──main.py       # サンプル機械学習ソースコード(sklearn)
+　　│──model         # モデル保存用フォルダ
+　　└──run_model.sh  # main.py実行するシェルスクリプト
+　│──my_package     # パッケージ化したいモジュール
+　├──notebook       # EDAで使用するnotebook
+　├──streamlit_app  # streamlitのapp
 ```
 
 
