@@ -1,30 +1,29 @@
 # WSL2+Docker+poetryで環境構築
 
-- 参考: https://cpp-learning.com/wsl2-docker-vscode/
+- 参考: 
+  - https://cpp-learning.com/wsl2-docker-vscode/
+  - https://wimper-1996.hatenablog.com/entry/2020/10/14/114458
+  - https://qiita.com/yolo_kiyoshi/items/332ae902aeb730fbd068
 
 
 
-## フォルダ構成
+## ディレクトリ構成
 
+```
 docker-ml
-
-│──**Dockerfile  #  pyproject.toml で定義した各パッケージを自動でインストールするようにしたDockerfile**
-
-│──**pyproject.toml  # poetryでパッケージ依存を管理。使ってるpoetry環境のpyproject.tomlに置き換えたらいい**
-
-│──docker_run.sh  # Dockerfileたたくシェルスクリプト
-
+│──Dockerfile      #  pyproject.toml で定義した各パッケージを自動でインストールするようにしたDockerfile
+│──pyproject.toml  # poetryでパッケージ依存を管理。使ってるpoetry環境のpyproject.tomlに置き換えたらいい
+│──docker_run.sh   # Dockerfileたたくシェルスクリプト
 │──docker_ml
-
 　│──※環境構築コマンド履歴.txt  # Dockerでpyproject.toml作る手順とかのメモ
-
-　│──code
-
-　　│──main.py  # サンプル機械学習ソースコード(sklearn)
-
-　　│──model  # モデル保存用フォルダ
-
+　│──tests          # テストコード
+　　│──main.py       # サンプル機械学習ソースコード(sklearn)
+　　│──model         # モデル保存用フォルダ
 　　└──run_model.sh  # main.py実行するシェルスクリプト
+　│──my_package     # パッケージ化したいモジュール
+　├──notebook       # EDAで使用するnotebook
+　├──streamlit_app  # streamlitのapp
+```
 
 
 
@@ -34,10 +33,22 @@ docker-ml
 ```bash
 $ cd /mnt/c/Users/81908/MyGitHub/docker_ml/docker_ml
 $ ./docker_run.sh  # イメージ作成+コンテナ起動
-$ cd docker_ml/code/  # コード置いてるディレクトリに移動
+
+$ cd tests/  # テストコード置いてるディレクトリに移動
 $ ./run_model.sh  # モデル学習予測実行
-$ cd ../notebok
-$ jupyter lab --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.token='' --port=8889  # http://localhost:8889/ からjupyter起動確認
+ 
+# streamlit起動確認
+$ cd ..
+$ streamlit run streamlit_app/app.py --server.port 8502
+
+# http://localhost:8889/ からjupyter起動確認
+$ jupyter lab --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.token='' --port=8889
+notebook/test.ipynb 実行（mlflowのファイル出力）
+
+# mlflow起動確認
+$ cd notebook/
+$ mlflow ui --port 8502 --host 0.0.0.0
+
 $ exit  # コンテナから出る
 ```
 

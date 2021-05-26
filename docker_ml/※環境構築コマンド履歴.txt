@@ -8,7 +8,7 @@ C:\Users\[username]\.wslconfig
 docker build -t docker_ml -f Dockerfile_for_make_toml .
 
 # コンテナ起動
-docker run -p 8889:8889 -it -v $PWD/docker_ml:/docker_ml --rm docker_ml /bin/bash
+docker run -p 8889:8889 -p 8502:8502 -it -v $PWD/docker_ml:/docker_ml --rm docker_ml /bin/bash
 
 # pyproject.toml作成する（Dockerfileにpipコマンド書いていくより、poetryでパッケージ追加した方がバージョン管理が楽なはず…）
 poetry init
@@ -16,19 +16,29 @@ poetry init
 
 # パッケージ追加
 poetry add numpy pandas matplotlib seaborn scikit-learn tqdm
-poetry add xgboost lightgbm
+poetry add xgboost lightgbm catboost
 poetry add torch
+poetry add mlflow
+poetry add nyaggle
 poetry add optuna
 poetry add streamlit
-poetry add nyaggle
 poetry add jupyterlab jupyter black jupyter_contrib_nbextensions papermill
 poetry run jupyter contrib nbextension install --user
 poetry run jupyter nbextensions_configurator enable --user
 
+# streamlit起動確認
+streamlit run streamlit_app/app.py --server.port 8502
+
 # jupyter起動確認
 jupyter lab --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.token='' --port=8889
+notebook/test.ipynb 実行（mlflowのファイル出力）
+
+# mlflow起動確認
+cd notebook/
+mlflow ui --port 8502 --host 0.0.0.0
 
 # 別のwsl2でシェル起動してコンテナで作成したpyproject.tomlをローカルにコピー
+# ※docker_mlディレクトリマウントしてるからGUIでコピペでも可能
 docker cp <コンテナ名。コンテナ名はDocker Desktopのアプリからわかる>:/pyproject.toml /mnt/c/Users/81908
 実際にたたいたコマンド docker cp gifted_edison:/pyproject.toml /mnt/c/Users/81908/
 
@@ -36,8 +46,8 @@ docker cp <コンテナ名。コンテナ名はDocker Desktopのアプリからわかる>:/pyproject.
 exit
 
 # pyproject.toml使って再度イメージ+コンテナ作成
-# メモリ足りない場合は-m 16g とかにすること（これ指定するとコンテナが最大16Gまでしかメモリ確保しないようにする）
 docker build -t docker_ml -f Dockerfile .
-docker run -p 8889:8889 -it -v $PWD/docker_ml:/docker_ml --rm docker_ml /bin/bash
+# メモリ指定する場合は-m 16g とかにすること（これ指定するとコンテナが最大16Gまでしかメモリ確保しないようにする）
+docker run -p 8889:8889 -p 8502:8502 -it -v $PWD/docker_ml:/docker_ml --rm docker_ml /bin/bash
 
 
