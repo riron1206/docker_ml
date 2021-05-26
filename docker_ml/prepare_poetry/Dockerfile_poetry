@@ -1,10 +1,7 @@
 FROM python:3.8
 
-# コンソールのstdout（標準出力）とstderr（標準エラー出力）のバッファーを無効にする設定
-ENV PYTHONUNBUFFERED=1
-
 # 各種命令を実行する際のカレントディレクトリを指定
-WORKDIR /docker_ml
+WORKDIR /workdir
 
 # poetry のインストール
 RUN set -x && \

@@ -1,20 +1,20 @@
-# .wslconfig ‚ğ’u‚¢‚ÄAWSL2 ‚Åg—p‚Å‚«‚éƒƒ‚ƒŠ‚ÌÅ‘å’l‚ğİ’è‚·‚é
-# Ql: https://zenn.dev/takajun/articles/4f15d115548899
+# .wslconfig ã‚’ç½®ã„ã¦ã€WSL2 ã§ä½¿ç”¨ã§ãã‚‹ãƒ¡ãƒ¢ãƒªã®æœ€å¤§å€¤ã‚’è¨­å®šã™ã‚‹
+# å‚è€ƒ: https://zenn.dev/takajun/articles/4f15d115548899
 C:\Users\[username]\.wslconfig
 
-# wsl2‚ÅƒVƒFƒ‹‹N“®‚µ‚ÄˆÈ‰º‚ÌƒRƒ}ƒ“ƒh‚½‚½‚¢‚Ä‚¢‚­
+# wsl2ã§ã‚·ã‚§ãƒ«èµ·å‹•ã—ã¦ä»¥ä¸‹ã®ã‚³ãƒãƒ³ãƒ‰ãŸãŸã„ã¦ã„ã
 
-# ƒCƒ[ƒWì¬
-docker build -t docker_ml -f Dockerfile_for_make_toml .
+# ã‚¤ãƒ¡ãƒ¼ã‚¸ä½œæˆ
+docker build -t docker_ml -f Dockerfile_poetry .
 
-# ƒRƒ“ƒeƒi‹N“®
+# ã‚³ãƒ³ãƒ†ãƒŠèµ·å‹•
 docker run -p 8889:8889 -p 8502:8502 -it -v $PWD/docker_ml:/docker_ml --rm docker_ml /bin/bash
 
-# pyproject.tomlì¬‚·‚éiDockerfile‚ÉpipƒRƒ}ƒ“ƒh‘‚¢‚Ä‚¢‚­‚æ‚èApoetry‚ÅƒpƒbƒP[ƒW’Ç‰Á‚µ‚½•û‚ªƒo[ƒWƒ‡ƒ“ŠÇ—‚ªŠy‚È‚Í‚¸cj
+# pyproject.tomlä½œæˆã™ã‚‹ï¼ˆDockerfileã«pipã‚³ãƒãƒ³ãƒ‰æ›¸ã„ã¦ã„ãã‚ˆã‚Šã€poetryã§ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸è¿½åŠ ã—ãŸæ–¹ãŒãƒãƒ¼ã‚¸ãƒ§ãƒ³ç®¡ç†ãŒæ¥½ãªã¯ãšâ€¦ï¼‰
 poetry init
-> Package name []:  docker_ml ‚É‚·‚é.‚ ‚Æ‚ÍEnter‰Ÿ‚µ‚ÄƒfƒtƒHƒ‹ƒg‚Å‚¢‚­
+> Package name []:  docker_ml ã«ã™ã‚‹.ã‚ã¨ã¯EnteræŠ¼ã—ã¦ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ã„ã
 
-# ƒpƒbƒP[ƒW’Ç‰Á
+# ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸è¿½åŠ 
 poetry add numpy pandas matplotlib seaborn scikit-learn tqdm
 poetry add xgboost lightgbm catboost
 poetry add torch
@@ -22,32 +22,37 @@ poetry add mlflow
 poetry add nyaggle
 poetry add optuna
 poetry add streamlit
+poetry add pillow
+poetry add opencv-python-headless
 poetry add jupyterlab jupyter black jupyter_contrib_nbextensions papermill
 poetry run jupyter contrib nbextension install --user
 poetry run jupyter nbextensions_configurator enable --user
+poetry run jupyter nbextension enable highlight_selected_word/main
+poetry run jupyter nbextension enable hinterland/hinterland
+poetry run jupyter nbextension enable toc2/main
 
-# streamlit‹N“®Šm”F
+# streamlitèµ·å‹•ç¢ºèª
 streamlit run streamlit_app/app.py --server.port 8502
 
-# jupyter‹N“®Šm”F
+# jupyterèµ·å‹•ç¢ºèª
 jupyter lab --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.token='' --port=8889
-notebook/test.ipynb Àsimlflow‚Ìƒtƒ@ƒCƒ‹o—Íj
+notebook/test.ipynb å®Ÿè¡Œï¼ˆmlflowã®ãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›ï¼‰
 
-# mlflow‹N“®Šm”F
+# mlflowèµ·å‹•ç¢ºèª
 cd notebook/
 mlflow ui --port 8502 --host 0.0.0.0
 
-# •Ê‚Ìwsl2‚ÅƒVƒFƒ‹‹N“®‚µ‚ÄƒRƒ“ƒeƒi‚Åì¬‚µ‚½pyproject.toml‚ğƒ[ƒJƒ‹‚ÉƒRƒs[
-# ¦docker_mlƒfƒBƒŒƒNƒgƒŠƒ}ƒEƒ“ƒg‚µ‚Ä‚é‚©‚çGUI‚ÅƒRƒsƒy‚Å‚à‰Â”\
-docker cp <ƒRƒ“ƒeƒi–¼BƒRƒ“ƒeƒi–¼‚ÍDocker Desktop‚ÌƒAƒvƒŠ‚©‚ç‚í‚©‚é>:/pyproject.toml /mnt/c/Users/81908
-ÀÛ‚É‚½‚½‚¢‚½ƒRƒ}ƒ“ƒh docker cp gifted_edison:/pyproject.toml /mnt/c/Users/81908/
+# åˆ¥ã®wsl2ã§ã‚·ã‚§ãƒ«èµ·å‹•ã—ã¦ã‚³ãƒ³ãƒ†ãƒŠã§ä½œæˆã—ãŸpyproject.tomlã‚’ãƒ­ãƒ¼ã‚«ãƒ«ã«ã‚³ãƒ”ãƒ¼
+# â€»docker_mlãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãƒã‚¦ãƒ³ãƒˆã—ã¦ã‚‹ã‹ã‚‰GUIã§ã‚³ãƒ”ãƒšã§ã‚‚å¯èƒ½
+docker cp <ã‚³ãƒ³ãƒ†ãƒŠåã€‚ã‚³ãƒ³ãƒ†ãƒŠåã¯Docker Desktopã®ã‚¢ãƒ—ãƒªã‹ã‚‰ã‚ã‹ã‚‹>:/pyproject.toml /mnt/c/Users/81908
+å®Ÿéš›ã«ãŸãŸã„ãŸã‚³ãƒãƒ³ãƒ‰ docker cp gifted_edison:/pyproject.toml /mnt/c/Users/81908/
 
-# ƒRƒ“ƒeƒi‚©‚ço‚é
+# ã‚³ãƒ³ãƒ†ãƒŠã‹ã‚‰å‡ºã‚‹
 exit
 
-# pyproject.tomlg‚Á‚ÄÄ“xƒCƒ[ƒW+ƒRƒ“ƒeƒiì¬
+# pyproject.tomlä½¿ã£ã¦å†åº¦ã‚¤ãƒ¡ãƒ¼ã‚¸+ã‚³ãƒ³ãƒ†ãƒŠä½œæˆ
 docker build -t docker_ml -f Dockerfile .
-# ƒƒ‚ƒŠw’è‚·‚éê‡‚Í-m 16g ‚Æ‚©‚É‚·‚é‚±‚Æi‚±‚êw’è‚·‚é‚ÆƒRƒ“ƒeƒi‚ªÅ‘å16G‚Ü‚Å‚µ‚©ƒƒ‚ƒŠŠm•Û‚µ‚È‚¢‚æ‚¤‚É‚·‚éj
+# ãƒ¡ãƒ¢ãƒªæŒ‡å®šã™ã‚‹å ´åˆã¯-m 16g ã¨ã‹ã«ã™ã‚‹ã“ã¨ï¼ˆã“ã‚ŒæŒ‡å®šã™ã‚‹ã¨ã‚³ãƒ³ãƒ†ãƒŠãŒæœ€å¤§16Gã¾ã§ã—ã‹ãƒ¡ãƒ¢ãƒªç¢ºä¿ã—ãªã„ã‚ˆã†ã«ã™ã‚‹ï¼‰
 docker run -p 8889:8889 -p 8502:8502 -it -v $PWD/docker_ml:/docker_ml --rm docker_ml /bin/bash
 
 

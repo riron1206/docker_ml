@@ -19,8 +19,8 @@ COPY ./pyproject.toml ./
 RUN poetry install --no-root --no-dev
 
 # JupyterNotebookの拡張機能を有効化（入力補完, 変数のハイライト機能, 目次）
-RUN pip install jupyter_contrib_nbextensions && \
-    jupyter contrib nbextension install --user && \
+RUN jupyter contrib nbextension install --user && \
+    jupyter nbextensions_configurator enable --user && \
     jupyter nbextension enable highlight_selected_word/main &&\
     jupyter nbextension enable hinterland/hinterland && \
     jupyter nbextension enable toc2/main

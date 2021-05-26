@@ -1,4 +1,4 @@
-# WSL2+Docker+poetryで環境構築
+# WSL2+Docker+poetryでML環境(cpu only)構築
 
 - 参考: 
   - https://cpp-learning.com/wsl2-docker-vscode/
@@ -11,28 +11,54 @@
 
 ```
 docker-ml
-│──Dockerfile      #  pyproject.toml で定義した各パッケージを自動でインストールするようにしたDockerfile
-│──pyproject.toml  # poetryでパッケージ依存を管理。使ってるpoetry環境のpyproject.tomlに置き換えたらいい
-│──docker_ml
-　│──※環境構築コマンド履歴.txt  # Dockerでpyproject.toml作る手順とかのメモ
-　│──tests          # テストコード
-　　│──main.py       # サンプル機械学習ソースコード(sklearn)
-　　│──model         # モデル保存用フォルダ
-　　└──run_model.sh  # main.py実行するシェルスクリプト
-　│──my_package     # パッケージ化したいモジュール
-　├──notebook       # EDAで使用するnotebook
-　├──streamlit_app  # streamlitのapp
+│──Dockerfile         # pyproject.toml で定義した各パッケージを自動でインストールするようにしたDockerfile
+│──Dockerfile_poetry  # poetryをinstallするだけのDockerfile
+│──pyproject.toml     # poetryでパッケージ依存を管理。使ってるpoetry環境のpyproject.tomlに置き換えたらいい
+│──※環境構築コマンド履歴.txt  # Dockerでpyproject.toml作る手順とかのメモ
+│──tests          # テストコード
+　│──main.py       # サンプル機械学習ソースコード(sklearn)
+　│──model         # モデル保存用フォルダ
+　└──run_model.sh  # main.py実行するシェルスクリプト
+│──my_package     # パッケージ化したいモジュール
+├──notebook       # EDAで使用するnotebook
+├──streamlit_app  # streamlitのapp
 ```
 
 
 
-## コマンドラインからコンテナ起動する手順
+## pyproject.tomlにパッケージ追加する方法
 
 - wsl2のコマンドプロンプト起動
 ```bash
+$ cd ./docker_ml/prepare_poetry
+
+# イメージ作成（pyproject.tomlを作るためだけのpoetryというDockerイメージ作成）
+$ docker build -t poetry -f Dockerfile_poetry .
+
+# コンテナ起動
+$ docker run -it -v $PWD:/workdir --rm poetry /bin/bash
+
+# カレントディレクトリのpyproject.tomlから必要なパッケージをインストール
+$ poetry install  # 1からpyproject.toml を作る場合は$ poetry init
+
+# pyproject.tomlに任意のパッケージ追加
+$ poetry add <opencv-python-headless とか>
+
+# コンテナから出る(--rm オプション付けて起動してるので、出たらコンテナ削除される)
+$ exit
+```
+
+
+
+## pyproject.tomlからDockerイメージ作る手順
+
+- wsl2のコマンドプロンプト起動
+
+  **※作成したpyproject.toml を./docker_ml に置いておくこと！！！**
+```bash
 $ cd ./docker_ml
 
-# イメージ作成
+# イメージ作成（docker_mlというDockerイメージ作成. pyproject.tomlのパッケージをpipでinstallする）
 $ docker build -t docker_ml -f Dockerfile .
 
 # コンテナ起動
@@ -48,13 +74,13 @@ $ streamlit run streamlit_app/app.py --server.port 8502
 
 # http://localhost:8889/ からjupyter起動確認
 $ jupyter lab --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.token='' --port=8889
-notebook/test.ipynb 実行（mlflowのファイル出力）
+=> notebook/test.ipynb 実行（mlflowのファイル出力）
 
 # http://localhost:8502/ からmlflow起動確認
 $ cd notebook/
 $ mlflow ui --port 8502 --host 0.0.0.0
 
-# コンテナから出る
+# コンテナから出る(--rm オプション付けて起動してるので、出たらコンテナ削除される)
 $ exit
 ```
 
