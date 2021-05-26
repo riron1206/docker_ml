@@ -13,7 +13,6 @@
 docker-ml
 │──Dockerfile      #  pyproject.toml で定義した各パッケージを自動でインストールするようにしたDockerfile
 │──pyproject.toml  # poetryでパッケージ依存を管理。使ってるpoetry環境のpyproject.tomlに置き換えたらいい
-│──docker_run.sh   # Dockerfileたたくシェルスクリプト
 │──docker_ml
 　│──※環境構築コマンド履歴.txt  # Dockerでpyproject.toml作る手順とかのメモ
 　│──tests          # テストコード
@@ -31,13 +30,19 @@ docker-ml
 
 - wsl2のコマンドプロンプト起動
 ```bash
-$ cd /mnt/c/Users/81908/MyGitHub/docker_ml/docker_ml
-$ ./docker_run.sh  # イメージ作成+コンテナ起動
+$ cd ./docker_ml
 
-$ cd tests/  # テストコード置いてるディレクトリに移動
-$ ./run_model.sh  # モデル学習予測実行
+# イメージ作成
+$ docker build -t docker_ml -f Dockerfile .
+
+# コンテナ起動
+$ docker run -p 8889:8889 -p 8502:8502 -it -v $PWD/docker_ml:/docker_ml --rm docker_ml /bin/bash
+
+# テストコード置いてるディレクトリに移動してモデル学習予測実行
+$ cd tests/
+$ ./run_model.sh
  
-# streamlit起動確認
+# http://localhost:8502/ からstreamlit起動確認
 $ cd ..
 $ streamlit run streamlit_app/app.py --server.port 8502
 
@@ -45,11 +50,12 @@ $ streamlit run streamlit_app/app.py --server.port 8502
 $ jupyter lab --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.token='' --port=8889
 notebook/test.ipynb 実行（mlflowのファイル出力）
 
-# mlflow起動確認
+# http://localhost:8502/ からmlflow起動確認
 $ cd notebook/
 $ mlflow ui --port 8502 --host 0.0.0.0
 
-$ exit  # コンテナから出る
+# コンテナから出る
+$ exit
 ```
 
 
